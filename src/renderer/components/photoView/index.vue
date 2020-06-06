@@ -1,21 +1,23 @@
 <template>
   <div id="photo-view">
     <empty-page content="暂未上传图片" v-if="!(isAuthed && images[0])"></empty-page>
-    <el-row v-if="isAuthed && images[0]">
-      <el-col :span="8" v-for="(image,index) in images" :key="image.hash">
-        <div class="photo-grid" @mouseenter="mouseOver(index)" @mouseleave="mouseOver(-1)">
-          <div class="photo-hover" v-if="hoverIndex===index">
-            <div class="copy-link" @click="handleCopy(index)">
-              <span class="icon-copy"></span>
+    <div class="photo-area">
+      <el-row v-if="isAuthed && images[0]">
+        <el-col :span="8" v-for="(image,index) in images" :key="image.hash">
+          <div class="photo-grid" @mouseenter="mouseOver(index)" @mouseleave="mouseOver(-1)">
+            <div class="photo-hover" v-if="hoverIndex===index">
+              <div class="copy-link" @click="handleCopy(index)">
+                <span class="icon-copy"></span>
+              </div>
+              <div class="delete-photo" @click="handleDelete(index)">
+                <span class="icon-delete"></span>
+              </div>
             </div>
-            <div class="delete-photo" @click="handleDelete(index)">
-              <span class="icon-delete"></span>
-            </div>
+            <img v-bind:src="image.url" class="photo" alt @click="handleClick(index)" />
           </div>
-          <img v-bind:src="image.url" class="photo" alt @click="handleClick(index)" />
-        </div>
-      </el-col>
-    </el-row>
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 
@@ -25,11 +27,6 @@ import { getHistory } from "@/apis/image";
 import { mapActions, mapGetters } from "vuex";
 import { Message, MessageBox } from "element-ui";
 import axios from "axios";
-const low = require("lowdb");
-const FileSync = require("lowdb/adapters/FileSync");
-// 加载数据库JSON文件
-const adapter = new FileSync("db.json");
-const db = low(adapter);
 const copy = require("copy-text-to-clipboard");
 export default {
   name: "photo-view",
@@ -85,12 +82,15 @@ export default {
     }
   },
   async created() {
-    // this.fetchImages();
+    this.fetchImages();
   }
 };
 </script>
 
 <style lang="scss" scoped>
+.photo-area {
+  margin-bottom: 20px;
+}
 #photo-view {
   width: 100%;
 
@@ -104,6 +104,7 @@ export default {
     margin: 10px;
     display: flex;
     justify-content: center;
+    align-items: center;
     overflow: hidden;
     box-shadow: 0 0 8px rgba($color: #000000, $alpha: 0.1);
     .photo {

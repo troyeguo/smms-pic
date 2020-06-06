@@ -9,18 +9,6 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import axios from "axios";
-// axios
-//   .get("https://sm.ms/api/v2/upload_history", {
-//     headers: {
-//       Authorization: "ioTLRUHum8ky6YrVqTb3QY6yxITYcdT0",
-
-//       crossDomain: true,
-//       "Access-Control-Allow-Origin": "*"
-//     }
-//   })
-//   .then(res => {
-//     console.log(res);
-//   });
 
 export default {
   name: "zenpic",

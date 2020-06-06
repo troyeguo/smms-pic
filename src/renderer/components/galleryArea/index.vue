@@ -5,7 +5,7 @@
         <div class="photo-album-title">
           <div
             class="photo-title"
-            v-bind:class="{'active-title': activeIndex===0}"
+            v-bind:class="{'active-title': activeTab===0}"
             @click="handleSelect(0)"
           >
             <span class="icon-photo"></span>
@@ -13,23 +13,21 @@
           </div>
           <div
             class="album-title"
-            v-bind:class="{'active-title': activeIndex===1}"
+            v-bind:class="{'active-title': activeTab===1}"
             @click="handleSelect(1)"
           >
             <span class="icon-album"></span>
-            <span>我的相册</span>
+            <span>正在上传</span>
           </div>
         </div>
       </el-col>
-      <el-col :span="24" v-show="activeIndex===0" class="gallery-content">
+      <el-col :span="24" v-show="activeTab===0" class="gallery-content">
         <keep-alive>
           <photo-view></photo-view>
         </keep-alive>
       </el-col>
-      <el-col :span="24" v-show="activeIndex===1" class="gallery-content">
-        <keep-alive>
-          <album-view></album-view>
-        </keep-alive>
+      <el-col :span="24" v-show="activeTab===1" class="gallery-content">
+        <upload-list></upload-list>
       </el-col>
     </el-row>
   </div>
@@ -37,22 +35,29 @@
 
 <script>
 import PhotoView from "../photoView";
-import AlbumView from "../albumView";
+import UploadList from "../uploadList";
+import { mapActions, mapGetters } from "vuex";
+
 export default {
   name: "gallery-area",
 
   components: {
     PhotoView,
-    AlbumView
+    UploadList
   },
   data() {
-    return {
-      activeIndex: 1
-    };
+    return {};
+  },
+  computed: {
+    ...mapGetters("app", ["activeTab"])
   },
   methods: {
+    ...mapActions("app", {
+      setActiveTab: "setActiveTab"
+    }),
     handleSelect(key) {
-      this.activeIndex = key;
+      // console.log(key, "handleSet");
+      this.setActiveTab(key);
     }
   }
 };
@@ -85,6 +90,7 @@ export default {
 
   .el-row {
     .gallery-content {
+      width: 100vw;
       overflow-y: scroll;
       height: calc(100vh - 230px);
       padding: 0 40px 0 40px !important;

@@ -109,6 +109,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.photo-display {
+  z-index: 20;
+}
 .icon-close {
   float: right;
   font-size: 25px;
@@ -125,6 +128,7 @@ export default {
   top: 0px;
   left: 0px;
   background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10;
 }
 .photo-container {
   position: absolute;

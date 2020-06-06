@@ -1,7 +1,6 @@
 <template>
   <div ref="app" id="app">
     <login-dialog></login-dialog>
-    <new-album-dialog></new-album-dialog>
     <photo-display></photo-display>
     <el-row>
       <el-col :span="24">
@@ -19,7 +18,6 @@ import UploadArea from "@/components/uploadArea";
 import GalleryArea from "@/components/galleryArea";
 import LoginDialog from "@/components/loginDialog";
 import PhotoDisplay from "@/components/photoDisplay";
-import NewAlbumDialog from "@/components/newAlbumDialog";
 export default {
   name: "app",
   data() {
@@ -29,8 +27,7 @@ export default {
     UploadArea,
     GalleryArea,
     LoginDialog,
-    PhotoDisplay,
-    NewAlbumDialog
+    PhotoDisplay
   }
 };
 </script>

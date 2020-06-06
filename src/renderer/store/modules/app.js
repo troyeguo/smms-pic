@@ -8,23 +8,21 @@ const db = low(adapter);
 let state = {
   isShowLogin: false,
   isAuthed: false,
-  isNewAlbum: true,
-  isAddAlbum: false,
   images: db.get("images").value() || [],
-  albums: db.get("ablums").value() || [],
   photoIndex: 0,
   isDisplay: false,
+  activeTab: 0,
+  uploadList: [],
 };
 
 let getters = {
   isShowLogin: (state) => state.isShowLogin,
   isAuthed: (state) => state.isAuthed,
-  isNewAlbum: (state) => state.isNewAlbum,
-  isAddAlbum: (state) => state.isAddAlbum,
   images: (state) => state.images,
-  albums: (state) => state.albums,
   photoIndex: (state) => state.photoIndex,
   isDisplay: (state) => state.isDisplay,
+  uploadList: (state) => state.uploadList,
+  activeTab: (state) => state.activeTab,
 };
 
 let mutations = {
@@ -34,23 +32,20 @@ let mutations = {
   SET_AUTH: (state, isAuthed) => {
     state.isAuthed = isAuthed;
   },
-  SET_NEW_ALBUM: (state, isNewAlbum) => {
-    state.isNewAlbum = isNewAlbum;
-  },
-  SET_ADD_ALBUM: (state, isAddAlbum) => {
-    state.isAddAlbum = isAddAlbum;
-  },
   SET_IMAGES: (state, images) => {
     state.images = images;
-  },
-  SET_ALBUMS: (state, albums) => {
-    state.albums = albums;
   },
   SET_PHOTO_INDEX: (state, photoIndex) => {
     state.photoIndex = photoIndex;
   },
   SET_DISPALY: (state, isDisplay) => {
     state.isDisplay = isDisplay;
+  },
+  SET_UPLOAD_LIST: (state, uploadList) => {
+    state.uploadList = uploadList;
+  },
+  SET_ACTIVE_TAB: (state, activeTab) => {
+    state.activeTab = activeTab;
   },
 };
 
@@ -61,20 +56,18 @@ let actions = {
   setAuth({ commit }, isAuthed) {
     return commit("SET_AUTH", isAuthed);
   },
-  setNewAlbum({ commit }, isNewAlbum) {
-    return commit("SET_NEW_ALBUM", isNewAlbum);
-  },
-  setAddAlbum({ commit }, isAddAlbum) {
-    return commit("SET_ADD_ALBUM", isAddAlbum);
-  },
-  setAlbums({ commit }, albums) {
-    return commit("SET_ALBUMS", albums);
-  },
   setPhotoIndex({ commit }, photoIndex) {
     return commit("SET_PHOTO_INDEX", photoIndex);
   },
   setDisplay({ commit }, isDisplay) {
     return commit("SET_DISPALY", isDisplay);
+  },
+  setUploadList({ commit }, uploadList) {
+    return commit("SET_UPLOAD_LIST", uploadList);
+  },
+  setActiveTab({ commit }, activeTab) {
+    // console.log(activeTab, "asfafg");
+    return commit("SET_ACTIVE_TAB", activeTab);
   },
   async fetchToken({ commit }, data) {
     await axios

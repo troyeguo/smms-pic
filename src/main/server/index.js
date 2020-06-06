@@ -1,7 +1,9 @@
 const Koa = require("koa");
 const Router = require("koa-router");
 const app = new Koa();
+const path = require("path");
 const router = new Router();
+const koaBody = require("koa-body");
 const axios = require("axios");
 const qs = require("qs");
 const low = require("lowdb");
@@ -9,7 +11,8 @@ const FileSync = require("lowdb/adapters/FileSync");
 // 加载数据库JSON文件
 const adapter = new FileSync("db.json");
 const db = low(adapter);
-
+const FormData = require("form-data");
+var fs = require("fs");
 // 初始化数据库
 db.defaults({ images: [], albums: [], token: null }).write();
 
@@ -17,7 +20,15 @@ let serverInfo = null;
 let koaServer = null;
 
 app.use(require("@koa/cors")());
-app.use(require("koa-bodyparser")());
+app.use(
+  koaBody({
+    multipart: true,
+    formidable: {
+      uploadDir: path.join(__dirname, "/uploads"),
+      keepExtensions: true,
+    },
+  })
+);
 console.log("后台启动");
 router.get("/token", async (ctx) => {
   console.log(ctx.request.query, "ctx.request.query");
@@ -46,10 +57,44 @@ router.get("/upload_history", async (ctx) => {
     console.log("获取数据出错");
     ctx.throw(401);
   }
-  // console.log(data.data);
+  // console.log(data.data[0]);
   db.set("images", data.data).write();
   // console.log(db.get("token").value());
   ctx.body = data.data;
+});
+router.post("/upload", async (ctx) => {
+  const file = ctx.request.files.file;
+  console.log(ctx.request.files.file, "ctx.request.body.files.file");
+  let formData = new FormData();
+  function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+  await sleep(2000);
+  ctx.body = { url: "https://i.loli.net/2020/03/28/fwFMsNrjkADOGgl.png" };
+
+  // formData.append(
+  //   "smfile",
+  //   fs.createReadStream(
+  //     path.resolve(__dirname, "uploads", file.path.split("\\").reverse()[0])
+  //   )
+  // );
+  // console.log(
+  //   path.resolve(__dirname, "uploads", file.path.split("\\").reverse()[0])
+  // );
+  // const formHeaders = formData.getHeaders();
+  // const { data } = await axios.post("https://sm.ms/api/v2/upload", formData, {
+  //   headers: {
+  //     ...formHeaders,
+  //     Authorization: db.get("token").value(),
+  //   },
+  // });
+  // console.log(data, "我被调用了");
+  // if (!data.data) {
+  //   console.log("获取数据出错");
+  //   ctx.throw(400);
+  // }
+
+  // ctx.body = data.data;
 });
 router.get("/delete", async (ctx) => {
   // console.log("我被调用了归属感");
