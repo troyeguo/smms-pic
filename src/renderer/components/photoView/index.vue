@@ -1,8 +1,8 @@
 <template>
   <div id="photo-view">
-    <empty-page content="暂未上传图片" v-if="!(isAuthed && images[0])"></empty-page>
-    <div class="photo-area">
-      <el-row v-if="isAuthed && images[0]">
+    <empty-page content="暂未上传图片" v-if="!(images[0])"></empty-page>
+    <div class="photo-area" v-if="images[0]">
+      <el-row>
         <el-col :span="8" v-for="(image,index) in images" :key="image.hash">
           <div class="photo-grid" @mouseenter="mouseOver(index)" @mouseleave="mouseOver(-1)">
             <div class="photo-hover" v-if="hoverIndex===index">
@@ -50,7 +50,6 @@ export default {
       setPhotoIndex: "setPhotoIndex"
     }),
     mouseOver(index) {
-      // console.log(index);
       this.hoverIndex = index;
     },
     handleClick(index) {
@@ -68,9 +67,7 @@ export default {
         type: "warning"
       })
         .then(async () => {
-          // console.log(this.images, "photo");
           this.deleteImage(index);
-          // await this.fetchImages();
         })
         .catch(err => {
           console.log(err);
@@ -117,10 +114,6 @@ export default {
       top: 0px;
       right: 0px;
       background: rgba(0, 200, 157, 0.67);
-      /* display: flex; */
-      /* justify-content: center; */
-      /* align-items: stretch; */
-
       color: white;
       border-radius: 0px 5px 5px 0px;
       .copy-link,

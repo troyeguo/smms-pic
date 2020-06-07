@@ -9,7 +9,10 @@
               <span class="icon-copy"></span>
             </div>
           </div>
-          <div class="photo-waiting" v-if="!item.uploading&&!item.finished">
+          <div
+            class="photo-waiting"
+            v-if="item.waiting&&!item.finished&&!item.failed&&!item.uploading"
+          >
             <div>
               <span class="icon-waiting"></span>
               <p>等待上传</p>
@@ -57,7 +60,6 @@ export default {
       setLoginDialog: "setLoginDialog"
     }),
     mouseOver(index) {
-      // console.log(index);
       this.hoverIndex = index;
     },
     handleCopy(index) {
@@ -95,9 +97,13 @@ export default {
       background: rgba(5, 176, 138, 0.55);
     }
     .photo-failed {
-      background-color: rgba(226, 0, 0, 0.7);
+      background-color: rgba(226, 0, 0, 0.5);
+    }
+    .photo-waiting {
+      background-color: rgba(0, 0, 0, 0.5);
     }
     .photo-loading,
+    .photo-waiting,
     .photo-failed {
       border-radius: 5px;
       position: absolute;
@@ -114,6 +120,7 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
+      .icon-waiting,
       .icon-loading,
       .icon-close {
         font-size: 25px;

@@ -15,10 +15,6 @@
         </el-col>
         <el-col :span="24">
           <div class="photo-operation">
-            <div class="operation-button">
-              <span class="icon-add"></span>
-              <span>添加到相册</span>
-            </div>
             <div class="operation-button" @click="handleCopy(photoIndex)">
               <span class="icon-copy"></span>
               <span>复制链接</span>
@@ -77,7 +73,6 @@ export default {
         this.$message.success("没有下一张啦！");
         return;
       }
-      // console.log(this.photoIndex);
       this.setPhotoIndex(this.photoIndex + 1);
     },
     handleCopy(index) {
@@ -92,9 +87,7 @@ export default {
         type: "warning"
       })
         .then(async () => {
-          // console.log(this.images, "photo");
           this.deleteImage(index);
-          // await this.fetchImages();
         })
         .catch(err => {
           console.log(err);

@@ -52,52 +52,49 @@ router.get("/upload_history", async (ctx) => {
       Authorization: db.get("token").value(),
     },
   });
-  // console.log(data, "我被调用了");
+  console.log(data, "我被调用了");
   if (!data.data) {
     console.log("获取数据出错");
     ctx.throw(401);
   }
-  // console.log(data.data[0]);
   db.set("images", data.data).write();
-  // console.log(db.get("token").value());
   ctx.body = data.data;
 });
 router.post("/upload", async (ctx) => {
   const file = ctx.request.files.file;
   console.log(ctx.request.files.file, "ctx.request.body.files.file");
   let formData = new FormData();
-  function sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-  await sleep(2000);
-  ctx.body = { url: "https://i.loli.net/2020/03/28/fwFMsNrjkADOGgl.png" };
-
-  // formData.append(
-  //   "smfile",
-  //   fs.createReadStream(
-  //     path.resolve(__dirname, "uploads", file.path.split("\\").reverse()[0])
-  //   )
-  // );
-  // console.log(
-  //   path.resolve(__dirname, "uploads", file.path.split("\\").reverse()[0])
-  // );
-  // const formHeaders = formData.getHeaders();
-  // const { data } = await axios.post("https://sm.ms/api/v2/upload", formData, {
-  //   headers: {
-  //     ...formHeaders,
-  //     Authorization: db.get("token").value(),
-  //   },
-  // });
-  // console.log(data, "我被调用了");
-  // if (!data.data) {
-  //   console.log("获取数据出错");
-  //   ctx.throw(400);
+  // function sleep(ms) {
+  //   return new Promise((resolve) => setTimeout(resolve, ms));
   // }
+  // await sleep(2000);
+  // ctx.body = { url: "https://i.loli.net/2020/03/28/fwFMsNrjkADOGgl.png" };
 
-  // ctx.body = data.data;
+  formData.append(
+    "smfile",
+    fs.createReadStream(
+      path.resolve(__dirname, "uploads", file.path.split("\\").reverse()[0])
+    )
+  );
+  console.log(
+    path.resolve(__dirname, "uploads", file.path.split("\\").reverse()[0])
+  );
+  const formHeaders = formData.getHeaders();
+  const { data } = await axios.post("https://sm.ms/api/v2/upload", formData, {
+    headers: {
+      ...formHeaders,
+      Authorization: db.get("token").value(),
+    },
+  });
+  console.log(data, "我被调用了");
+  if (!data.data) {
+    console.log("获取数据出错");
+    ctx.throw(400);
+  }
+
+  ctx.body = data.data;
 });
 router.get("/delete", async (ctx) => {
-  // console.log("我被调用了归属感");
   const { data } = await axios.get(
     `https://sm.ms/api/v2/delete/${ctx.request.query.hash}`,
     {
@@ -106,12 +103,10 @@ router.get("/delete", async (ctx) => {
       },
     }
   );
-  // console.log(data, "我被调用了");
   if (!data.data) {
     console.log("删除图片出错");
     ctx.throw(401, "删除图片出错");
   }
-  // console.log(data.data);
   db.set("images", data.data).write();
   ctx.body = data.data;
 });

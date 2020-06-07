@@ -52,30 +52,10 @@ export default {
     async handleLogin() {
       this.loading = true;
       console.log(this.form.name, this.form.password);
-      await this.fetchToken({
+      this.fetchToken({
         username: this.form.username,
         password: this.form.password
       });
-      await this.fetchImages();
-      // await axios
-      //   .get("http://localhost:8000/token", {
-      //     params: {
-      //       username: this.form.username,
-      //       password: this.form.password
-      //     }
-      //   })
-      //   .then(res => {
-      //     console.log(res);
-      //     console.log("登录成功");
-      //     Message.success("登录成功");
-      //     localStorage.setItem("isAuthed", "yes");
-      //     this.setAuth(true);
-      //   })
-      //   .catch(error => {
-      //     console.log(error);
-      //     Message.error("登录失败");
-      //     console.log("登录失败");
-      //   });
       this.setLoginDialog(false);
       this.loading = false;
     }
@@ -84,6 +64,4 @@ export default {
 </script>
 
 <style>
-.el-dialog {
-}
 </style>

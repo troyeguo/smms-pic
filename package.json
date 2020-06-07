@@ -1,5 +1,5 @@
 {
-  "name": "zenpic",
+  "name": "zen",
   "version": "0.0.1",
   "author": "troyeguo <guo362429@163.com>",
   "description": "An electron-vue project",
@@ -17,8 +17,8 @@
     "postinstall": ""
   },
   "build": {
-    "productName": "zenpic",
-    "appId": "xyz.960960.zenpic",
+    "productName": "Zen",
+    "appId": "xyz.960960.zen",
     "directories": {
       "output": "build"
     },

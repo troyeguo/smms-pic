@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
 const server = require("./server");
 /**
  * Set `__static` path to static files in production
@@ -22,9 +22,10 @@ function createWindow() {
    * Initial window options
    */
   mainWindow = new BrowserWindow({
-    height: 563,
+    height: 580,
     useContentSize: true,
-    width: 1000,
+    width: 800,
+    frame: false,
   });
 
   mainWindow.loadURL(winURL);
@@ -47,7 +48,9 @@ app.on("activate", () => {
     createWindow();
   }
 });
+ipcMain.on("close", (e) => mainWindow.close());
 
+ipcMain.on("minimize", (e) => mainWindow.minimize());
 /**
  * Auto Updater
  *

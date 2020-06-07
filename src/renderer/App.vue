@@ -11,7 +11,7 @@ import { mapActions, mapGetters } from "vuex";
 import axios from "axios";
 
 export default {
-  name: "zenpic",
+  name: "app",
   methods: {},
   computed: {}
 };

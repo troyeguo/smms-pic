@@ -1,5 +1,6 @@
 import axios from "axios";
 import { Message } from "element-ui";
+import _ from "lodash";
 const low = require("lowdb");
 const FileSync = require("lowdb/adapters/FileSync");
 // 加载数据库JSON文件
@@ -69,7 +70,7 @@ let actions = {
     // console.log(activeTab, "asfafg");
     return commit("SET_ACTIVE_TAB", activeTab);
   },
-  async fetchToken({ commit }, data) {
+  async fetchToken({ commit, dispatch }, data) {
     await axios
       .get("http://localhost:8000/token", {
         params: {
@@ -83,6 +84,7 @@ let actions = {
         Message.success("登录成功");
         localStorage.setItem("isAuthed", "yes");
         commit("SET_AUTH", true);
+        dispatch("fetchImages");
       })
       .catch((error) => {
         console.log(error);
@@ -95,8 +97,7 @@ let actions = {
       .get("http://localhost:8000/upload_history")
       .then((res) => {
         console.log(res.data, "fetchImages");
-        // this.setImages(res);
-        commit("SET_IMAGES", res.data);
+        commit("SET_IMAGES", _.cloneDeep(res.data));
       })
       .catch((err) => {
         console.log(err);

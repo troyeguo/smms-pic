@@ -18,7 +18,6 @@ export default { name: "empty-page", props: ["content"] };
 .el-row {
   width: 100%;
 }
-
 .el-col {
   display: flex;
   justify-content: center;
@@ -28,7 +27,7 @@ export default { name: "empty-page", props: ["content"] };
   margin-top: 10px;
 }
 .empty-text {
-  font-size: 20px;
+  font-size: 17px;
   font-weight: bold;
   line-height: 44px;
   color: rgba(47, 47, 47, 1);

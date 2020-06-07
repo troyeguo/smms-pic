@@ -3,20 +3,31 @@
     <div id="upload-area">
       <input
         type="file"
+        v-if="isShowAuthed || isAuthed"
         id="import-pic-box"
         class="import-book-box"
         name="file"
         accept="image/png, image/jpeg, image/gif, image/jpg, image/bmp"
         multiple="{true}"
-        @change="handleFile"
+        @change="chooseFile"
         ref="inputer"
         title=" "
       />
-
-      <div class="upload-pic" v-if="isShowAuthed || isAuthed">
+      <div class="progress-bar" ref="progress"></div>
+      <div class="progress-info" v-if="uploadFiles[0]&&(progressWidth!==100)">
+        <div>
+          <p style="{width:'18px'}">正在上传</p>
+          <p>进度：{{this.uploadingTask}}/{{this.uploadFiles.length}}</p>
+        </div>
+      </div>
+      <div
+        class="upload-pic"
+        v-if="!uploadFiles[0]&&(isShowAuthed || isAuthed)||(progressWidth===100)"
+        @dragover="fileDragover"
+        @drop="fileDrop"
+      >
         <span class="icon-upload"></span>
         <p class="upload-text">拖拽到此处或点击上传</p>
-        <p class="upload-info">建议图片格式为：JPG/JPEG/BMP/PNG/GIF，大小不超过5M，最多可同时上传10张</p>
       </div>
       <div class="login-account" v-if="!(isShowAuthed || isAuthed)" @click="handleLogin">
         <span class="icon-account"></span>
@@ -34,11 +45,29 @@ export default {
   data() {
     return {
       isShowAuthed: localStorage.getItem("isAuthed") === "yes",
-      imageList: []
+      imageList: [],
+      progress: 0,
+      uploadFiles: [],
+      uploadingTask: 0
     };
   },
   computed: {
-    ...mapGetters("app", ["isShowLogin", "isAuthed", "uploadList"])
+    ...mapGetters("app", ["isShowLogin", "isAuthed", "uploadList"]),
+    progressWidth: function() {
+      if (!this.uploadFiles[0]) {
+        return 0;
+      }
+      if (this.uploadingTask >= this.uploadFiles.length) {
+        return 100;
+      }
+      this.uploadingTask = 0;
+      this.uploadFiles.forEach(item => {
+        if (item.finished) {
+          this.uploadingTask++;
+        }
+      });
+      return (this.uploadingTask / this.uploadFiles.length) * 100;
+    }
   },
   methods: {
     ...mapActions("app", {
@@ -47,31 +76,63 @@ export default {
       fetchImages: "fetchImages",
       setActiveTab: "setActiveTab"
     }),
+    fileDragover(e) {
+      e.preventDefault();
+    },
+    fileDrop(e) {
+      e.preventDefault();
+      const files = e.dataTransfer.files; // 获取到第一个上传的文件对象
+      this.setActiveTab(1);
+      // 通过DOM取文件数据
+      this.imageList = files;
+      this.handleFile();
+    },
+    chooseFile(e) {
+      e.preventDefault();
+      let inputDOM = this.$refs.inputer;
+      this.setActiveTab(1);
+      // 通过DOM取文件数据
+      const files = inputDOM.files;
+      this.imageList = files;
+      this.handleFile();
+    },
+    handleProgress() {
+      this.$refs.progress.setAttribute("style", `width:${this.progressWidth}%`);
+      if (this.progressWidth === 100) {
+        this.$refs.progress.setAttribute("style", `display:none`);
+      }
+    },
     handleLogin() {
       this.setLoginDialog(true);
     },
-    async handleFile(event) {
-      let inputDOM = this.$refs.inputer;
-      let uploadFiles = [];
-      this.setActiveTab(1);
-      // 通过DOM取文件数据
-      this.imageList = inputDOM.files;
-      console.log(this.imageList[0], "this.imageList");
+    async handleFile() {
       for (let i = 0; i < this.imageList.length; i++) {
-        let formData = new FormData();
         let size = Math.floor(this.imageList[i].size / 1024);
         if (size > 5 * 1024 * 1024) {
           this.$message("请选择5M以内的图片！");
           return false;
         }
-        uploadFiles.push({
+        this.uploadFiles.push({
           url: window.webkitURL.createObjectURL(this.imageList[i]),
           finished: false,
-          uploading: true,
+          uploading: false,
           failed: false,
+          waiting: true,
           link: null
         });
-        this.setUploadList(_.cloneDeep(uploadFiles));
+        this.setUploadList(_.cloneDeep(this.uploadFiles));
+      }
+      console.log(this.uploadFiles.length, this.uploadFiles);
+      //二次上传时从上一次上传的终点开始传
+      for (
+        let i = this.uploadFiles.length - this.imageList.length;
+        i < this.uploadFiles.length;
+        i++
+      ) {
+        let formData = new FormData();
+        this.uploadFiles[i].waiting = false;
+        this.uploadFiles[i].uploading = true;
+        this.setUploadList(_.cloneDeep(this.uploadFiles));
         formData.append("file", this.imageList[i]);
         const { data } = await axios.post(
           "http://localhost:8000/upload",
@@ -83,36 +144,19 @@ export default {
           }
         );
         if (!data.url) {
-          uploadFiles[i].failed = true;
+          this.uploadFiles[i].failed = true;
           this.$message.error("图片上传失败，网络出现故障或图片重复上传");
-          this.setUploadList(_.cloneDeep(uploadFiles));
+          this.setUploadList(_.cloneDeep(this.uploadFiles));
           continue;
         }
-        setTimeout(() => {
-          uploadFiles[i].finished = true;
-          uploadFiles[i].link = data.url;
-          this.setUploadList(_.cloneDeep(uploadFiles));
-          this.$message.success("上传成功");
-        }, 2000);
+
+        this.uploadFiles[i].finished = true;
+        this.handleProgress();
+        this.uploadFiles[i].link = data.url;
+        this.setUploadList(_.cloneDeep(this.uploadFiles));
+        this.$message.success("上传成功");
       }
       this.fetchImages();
-      // this.formData.append("file", this.imageList[0]);
-      // this.formData.file = this.imageList[0];
-      // console.log(this.imageList, this.urlList, this.formData);
-      // axios
-      //   .post("http://localhost:8000/upload", this.formData, {
-      //     headers: {
-      //       "Content-Type": "multipart/form-data"
-      //     }
-      //   })
-      //   .then(res => {
-      //     console.log(res);
-      //     this.$message.success("上传成功");
-      //   })
-      //   .catch(error => {
-      //     console.log(error);
-      //     this.$message.error("上传失败");
-      //   });
     }
   }
 };
@@ -126,7 +170,7 @@ export default {
   outline: none;
   width: 100%;
   height: 100%;
-  border-radius: 50%;
+  border-radius: 23px;
   font-size: 0px;
   position: absolute;
   left: 0px;
@@ -146,6 +190,31 @@ export default {
   text-align: center;
   margin: 20px;
   cursor: pointer;
+  position: relative;
+  color: white;
+  .progress-bar {
+    height: 100%;
+    border-radius: 23px 0px 0px 23px;
+    font-size: 0px;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    background: rgba(255, 255, 255, 0.24);
+    box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.36);
+  }
+  .progress-info {
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 33px;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   .login-account,
   .upload-pic {
     .icon-account,
@@ -153,18 +222,12 @@ export default {
       color: white;
       font-size: 40px;
     }
-    .upload-text,
-    .upload-info {
+    .upload-text {
       font-size: 22px;
       font-weight: 500;
       line-height: 37px;
       color: rgba(255, 255, 255, 1);
       opacity: 1;
-    }
-    .upload-info {
-      font-size: 12px;
-      line-height: 15px;
-      color: rgba(255, 255, 255, 0.6);
     }
   }
 }
