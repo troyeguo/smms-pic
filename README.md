@@ -1,27 +1,27 @@
-<div align="center" width="128px" height="128px">
-<img src="https://i.loli.net/2020/06/07/wtYk7BRaVGIex8i.png" />
+<div align="center" >
+  <img src="https://i.loli.net/2020/06/07/yXQ6AZ2F7UtmWcS.png" />
 </div>
 
-  <h1 align="center">
-    Zen
-  </h1>
-  <h3 align="center">
-    一个基于 Vue，Koa2 和 Electron 开发的图床工具
-  </h3>
+<h1 align="center">
+  Zen
+</h1>
+<h3 align="center">
+  一个基于 Vue，Koa2 和 Electron 开发的图床工具
+</h3>
 
 ## 预览
 
 <div align="center">
-  <img src="https://i.loli.net/2020/06/07/TVH3YCjs8gAxOtE.png" >
-  <img src="https://i.loli.net/2020/06/07/Q5YqrdFaAyoOcDI.png" >
-  <img src="https://i.loli.net/2020/06/07/Ie8RClGAaphYHr4.png" >
+  <img src="https://i.loli.net/2020/06/07/qczG4sCLwT5xnly.png" >
+  <img src="https://i.loli.net/2020/06/07/I7ywBFokX6E1aMR.png" >
+  <img src="https://i.loli.net/2020/06/07/2ls4Q5dPqSLvm73.png" >
 </div>
 
 ## 简介
 
-👏 欢迎使用 **Zen** ！
+欢迎使用 **Zen** ！
 
-✍️ **Zen** 是一个开源免费的图床工具，目前仅支持 SM.MS 图床，后续考虑添加更多图床。
+**Zen** 是一个开源免费的图床工具，目前仅支持 SM.MS 图床，后续考虑添加更多图床。
 
 ## 使用方法
 
