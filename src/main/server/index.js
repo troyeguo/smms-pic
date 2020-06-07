@@ -15,7 +15,13 @@ const FormData = require("form-data");
 var fs = require("fs");
 // 初始化数据库
 db.defaults({ images: [], albums: [], token: null }).write();
-
+var dirPath = path.join(__dirname, "uploads");
+if (!fs.existsSync(dirPath)) {
+  fs.mkdirSync(dirPath);
+  console.log("文件夹创建成功");
+} else {
+  console.log("文件夹已存在");
+}
 let serverInfo = null;
 let koaServer = null;
 

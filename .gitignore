@@ -2,7 +2,7 @@
 dist/electron/*
 dist/web/*
 build/*
-uploads/*
+/uploads/
 !build/icons
 node_modules/
 npm-debug.log
