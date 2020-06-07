@@ -22,7 +22,6 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import { getToken } from "../../apis/token";
 import { Message } from "element-ui";
 import axios from "axios";
 export default {

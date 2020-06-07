@@ -13,6 +13,7 @@
         ref="inputer"
         title=" "
       />
+
       <div class="progress-bar" ref="progress"></div>
       <div class="progress-info" v-if="uploadFiles[0]&&(progressWidth!==100)">
         <div>
@@ -78,9 +79,11 @@ export default {
     }),
     fileDragover(e) {
       e.preventDefault();
+      console.log("fileDragover");
     },
     fileDrop(e) {
       e.preventDefault();
+      console.log("filedrop");
       const files = e.dataTransfer.files; // 获取到第一个上传的文件对象
       this.setActiveTab(1);
       // 通过DOM取文件数据

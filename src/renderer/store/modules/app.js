@@ -96,8 +96,8 @@ let actions = {
     await axios
       .get("http://localhost:8000/upload_history")
       .then((res) => {
-        console.log(res.data, "fetchImages");
-        commit("SET_IMAGES", _.cloneDeep(res.data));
+        // console.log(res.data, "fetchImages");
+        commit("SET_IMAGES", _.cloneDeep(res.data.reverse()));
       })
       .catch((err) => {
         console.log(err);

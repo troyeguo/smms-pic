@@ -12,10 +12,13 @@ const FileSync = require("lowdb/adapters/FileSync");
 const adapter = new FileSync("db.json");
 const db = low(adapter);
 const FormData = require("form-data");
+const electron = require("electron");
+const configDir = (electron.app || electron.remote.app).getPath("userData");
+console.log(configDir);
 var fs = require("fs");
 // 初始化数据库
-db.defaults({ images: [], albums: [], token: null }).write();
-var dirPath = path.join(__dirname, "uploads");
+db.defaults({ images: [], token: null }).write();
+var dirPath = path.join(configDir, "uploads");
 if (!fs.existsSync(dirPath)) {
   fs.mkdirSync(dirPath);
   console.log("文件夹创建成功");
@@ -30,35 +33,31 @@ app.use(
   koaBody({
     multipart: true,
     formidable: {
-      uploadDir: path.join(__dirname, "/uploads"),
+      uploadDir: path.join(configDir, "uploads"),
       keepExtensions: true,
     },
   })
 );
 console.log("后台启动");
 router.get("/token", async (ctx) => {
-  console.log(ctx.request.query, "ctx.request.query");
+  console.log("fetch token");
   const { data } = await axios.post(
     "https://sm.ms/api/v2/token",
     qs.stringify(ctx.request.query)
   );
   if (!data.data.token) {
-    console.log("获取数据出错");
     ctx.throw(401);
   }
-  console.log(data.data.token);
   db.set("token", data.data.token).write();
-  console.log(db.get("token").value());
+  console.log(data.data, "data.data");
   ctx.body = data.data;
 });
 router.get("/upload_history", async (ctx) => {
-  console.log("我被调用了归属感");
   const { data } = await axios.get("https://sm.ms/api/v2/upload_history", {
     headers: {
       Authorization: db.get("token").value(),
     },
   });
-  console.log(data, "我被调用了");
   if (!data.data) {
     console.log("获取数据出错");
     ctx.throw(401);
@@ -68,7 +67,6 @@ router.get("/upload_history", async (ctx) => {
 });
 router.post("/upload", async (ctx) => {
   const file = ctx.request.files.file;
-  console.log(ctx.request.files.file, "ctx.request.body.files.file");
   let formData = new FormData();
   // function sleep(ms) {
   //   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -79,11 +77,16 @@ router.post("/upload", async (ctx) => {
   formData.append(
     "smfile",
     fs.createReadStream(
-      path.resolve(__dirname, "uploads", file.path.split("\\").reverse()[0])
+      path.join(configDir, "uploads", file.path.split("\\").reverse()[0])
     )
   );
   console.log(
-    path.resolve(__dirname, "uploads", file.path.split("\\").reverse()[0])
+    path.resolve(
+      __dirname,
+      "uploads",
+      file.path.split("\\").reverse()[0],
+      "dirpath"
+    )
   );
   const formHeaders = formData.getHeaders();
   const { data } = await axios.post("https://sm.ms/api/v2/upload", formData, {
@@ -92,7 +95,7 @@ router.post("/upload", async (ctx) => {
       Authorization: db.get("token").value(),
     },
   });
-  console.log(data, "我被调用了");
+  // console.log(data);
   if (!data.data) {
     console.log("获取数据出错");
     ctx.throw(400);
@@ -155,15 +158,6 @@ async function start() {
   }
 }
 
-// function stop(callback) {
-//   if (koaServer) {
-//     koaServer.close(() => {
-//       serverInfo = null;
-//       koaServer = null;
-//       callback();
-//     });
-//   }
-// }
 async function startServer() {
   const { port, ip, local, message } = await start();
   if (message) {
@@ -176,7 +170,3 @@ async function startServer() {
 }
 
 startServer();
-// module.exports = {
-//   start,
-//   stop,
-// };

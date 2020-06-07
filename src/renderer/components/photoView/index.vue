@@ -23,7 +23,6 @@
 
 <script>
 import EmptyPage from "../emptyPage/index";
-import { getHistory } from "@/apis/image";
 import { mapActions, mapGetters } from "vuex";
 import { Message, MessageBox } from "element-ui";
 import axios from "axios";
@@ -79,7 +78,7 @@ export default {
     }
   },
   async created() {
-    this.fetchImages();
+    this.isAuthed && this.fetchImages();
   }
 };
 </script>
