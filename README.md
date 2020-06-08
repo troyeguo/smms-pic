@@ -1,7 +1,15 @@
 <div align="center" >
   <img src="https://i.loli.net/2020/06/07/yXQ6AZ2F7UtmWcS.png" />
 </div>
-
+<div align="center">
+  <a href="https://github.com/getgridea/gridea/releases/latest">
+    <img src="https://ci.appveyor.com/api/projects/status/3ktyyycodq6s4yew?svg=true" alt="">
+  </a>
+    <a href="https://github.com/getgridea/gridea/releases/latest">
+    <img src="https://travis-ci.com/troyeguo/Zen.svg?branch=master" alt="">
+  </a>
+</div>
+  
 <h1 align="center">
   Zen
 </h1>
