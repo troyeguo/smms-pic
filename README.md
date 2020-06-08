@@ -1,15 +1,7 @@
 <div align="center" >
   <img src="https://i.loli.net/2020/06/07/yXQ6AZ2F7UtmWcS.png" />
 </div>
-<div align="center">
-  <a href="https://github.com/getgridea/gridea/releases/latest">
-    <img src="https://ci.appveyor.com/api/projects/status/3ktyyycodq6s4yew?svg=true" alt="">
-  </a>
-    <a href="https://github.com/getgridea/gridea/releases/latest">
-    <img src="https://travis-ci.com/troyeguo/Zen.svg?branch=master" alt="">
-  </a>
-</div>
-  
+
 <h1 align="center">
   Zen
 </h1>
@@ -17,12 +9,27 @@
   一个基于 Vue，Koa2 和 Electron 开发的图床工具
 </h3>
 
+<div align="center">
+  <a href="https://github.com/troyeguo/Zen/releases/latest">
+    <img src="https://ci.appveyor.com/api/projects/status/3ktyyycodq6s4yew?svg=true" alt="">
+  </a>
+  <a href="https://github.com/troyeguo/Zen/releases/latest">
+    <img src="https://travis-ci.com/troyeguo/Zen.svg?branch=master" alt="">
+  </a>
+</div>
+
 ## 预览
 
 <div align="center">
-  <img src="https://i.loli.net/2020/06/07/qczG4sCLwT5xnly.png" >
-  <img src="https://i.loli.net/2020/06/07/I7ywBFokX6E1aMR.png" >
-  <img src="https://i.loli.net/2020/06/07/2ls4Q5dPqSLvm73.png" >
+  <a href="https://github.com/troyeguo/Zen/releases/latest">
+    <img src="https://i.loli.net/2020/06/07/qczG4sCLwT5xnly.png" >
+  </a>
+  <a href="https://github.com/troyeguo/Zen/releases/latest">
+    <img src="https://i.loli.net/2020/06/07/I7ywBFokX6E1aMR.png" >
+  </a>  
+  <a href="https://github.com/troyeguo/Zen/releases/latest">
+    <img src="https://i.loli.net/2020/06/07/2ls4Q5dPqSLvm73.png" >
+  </a>
 </div>
 
 ## 简介

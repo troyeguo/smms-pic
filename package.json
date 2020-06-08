@@ -1,6 +1,6 @@
 {
   "name": "zen",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "App by Troye",
   "description": "一个基于 Vue，Koa2 和 Electron 开发的图床工具",
   "license": "MIT",
