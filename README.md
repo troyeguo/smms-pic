@@ -22,14 +22,11 @@
 
 <div align="center">
   <a href="https://github.com/troyeguo/Zen/releases/latest">
-    <img src="https://i.loli.net/2020/06/07/qczG4sCLwT5xnly.png" >
+    <img src="https://i.loli.net/2020/07/10/6tCjKg3maUfTkEw.png" >
   </a>
   <a href="https://github.com/troyeguo/Zen/releases/latest">
-    <img src="https://i.loli.net/2020/06/07/I7ywBFokX6E1aMR.png" >
+    <img src="https://i.loli.net/2020/07/10/wOiH9VeT2lDt3Qd.png" >
   </a>  
-  <a href="https://github.com/troyeguo/Zen/releases/latest">
-    <img src="https://i.loli.net/2020/06/07/2ls4Q5dPqSLvm73.png" >
-  </a>
 </div>
 
 ## 简介
