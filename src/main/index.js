@@ -25,7 +25,6 @@ function createWindow() {
     height: 580,
     useContentSize: true,
     width: 800,
-    frame: false,
   });
 
   mainWindow.loadURL(winURL);
@@ -48,9 +47,7 @@ app.on("activate", () => {
     createWindow();
   }
 });
-ipcMain.on("close", (e) => mainWindow.close());
 
-ipcMain.on("minimize", (e) => mainWindow.minimize());
 /**
  * Auto Updater
  *

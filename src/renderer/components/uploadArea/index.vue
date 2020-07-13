@@ -1,6 +1,6 @@
 <template>
   <div id="upload-container">
-    <div id="upload-area">
+    <div id="upload-area" @dragend="handleDrag">
       <input
         type="file"
         v-if="isShowAuthed || isAuthed"
@@ -42,10 +42,15 @@
 import { mapActions, mapGetters } from "vuex";
 import axios from "axios";
 import _ from "lodash";
+const low = require("lowdb");
+const FileSync = require("lowdb/adapters/FileSync");
+// 加载数据库JSON文件
+const adapter = new FileSync("db.json");
+const db = low(adapter);
 export default {
   data() {
     return {
-      isShowAuthed: localStorage.getItem("isAuthed") === "yes",
+      isShowAuthed: db.get("token").value(),
       imageList: [],
       progress: 0,
       uploadFiles: [],
@@ -63,7 +68,7 @@ export default {
       }
       this.uploadingTask = 0;
       this.uploadFiles.forEach(item => {
-        if (item.finished) {
+        if (item.finished || item.failed) {
           this.uploadingTask++;
         }
       });
@@ -99,6 +104,11 @@ export default {
       this.imageList = files;
       this.handleFile();
     },
+    handleDrag(event) {
+      event.preventDefault();
+      console.log("drag stop");
+      return false;
+    },
     handleProgress() {
       this.$refs.progress.setAttribute("style", `width:${this.progressWidth}%`);
       if (this.progressWidth === 100) {
@@ -125,7 +135,6 @@ export default {
         });
         this.setUploadList(_.cloneDeep(this.uploadFiles));
       }
-      console.log(this.uploadFiles.length, this.uploadFiles);
       //二次上传时从上一次上传的终点开始传
       for (
         let i = this.uploadFiles.length - this.imageList.length;
@@ -136,28 +145,29 @@ export default {
         this.uploadFiles[i].waiting = false;
         this.uploadFiles[i].uploading = true;
         this.setUploadList(_.cloneDeep(this.uploadFiles));
-        formData.append("file", this.imageList[i]);
-        const { data } = await axios.post(
-          "http://localhost:8000/upload",
-          formData,
-          {
+        formData.append(
+          "file",
+          this.imageList[i - (this.uploadFiles.length - this.imageList.length)]
+        );
+        await axios
+          .post("http://localhost:3366/upload", formData, {
             headers: {
               "Content-Type": "multipart/form-data"
             }
-          }
-        );
-        if (!data.url) {
-          this.uploadFiles[i].failed = true;
-          this.$message.error("图片上传失败，网络出现故障或图片重复上传");
-          this.setUploadList(_.cloneDeep(this.uploadFiles));
-          continue;
-        }
-
-        this.uploadFiles[i].finished = true;
-        this.handleProgress();
-        this.uploadFiles[i].link = data.url;
-        this.setUploadList(_.cloneDeep(this.uploadFiles));
-        this.$message.success("上传成功");
+          })
+          .then(data => {
+            this.uploadFiles[i].finished = true;
+            this.handleProgress();
+            this.uploadFiles[i].link = data.data.url;
+            this.setUploadList(_.cloneDeep(this.uploadFiles));
+            this.$message.success("上传成功");
+          })
+          .catch(err => {
+            this.uploadFiles[i].failed = true;
+            this.handleProgress();
+            this.$message.error("图片上传失败，网络出现故障或图片重复上传");
+            this.setUploadList(_.cloneDeep(this.uploadFiles));
+          });
       }
       this.fetchImages();
     }

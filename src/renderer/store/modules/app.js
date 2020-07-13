@@ -9,7 +9,11 @@ const db = low(adapter);
 let state = {
   isShowLogin: false,
   isAuthed: false,
-  images: db.get("images").value() || [],
+  images:
+    db
+      .get("images")
+      .value()
+      .reverse() || [],
   photoIndex: 0,
   isDisplay: false,
   activeTab: 0,
@@ -67,12 +71,11 @@ let actions = {
     return commit("SET_UPLOAD_LIST", uploadList);
   },
   setActiveTab({ commit }, activeTab) {
-    // console.log(activeTab, "asfafg");
     return commit("SET_ACTIVE_TAB", activeTab);
   },
   async fetchToken({ commit, dispatch }, data) {
     await axios
-      .get("http://localhost:8000/token", {
+      .get("http://localhost:3366/token", {
         params: {
           username: data.username,
           password: data.password,
@@ -92,11 +95,9 @@ let actions = {
       });
   },
   async fetchImages({ commit }) {
-    console.log("fetchimages");
     await axios
-      .get("http://localhost:8000/upload_history")
+      .get("http://localhost:3366/upload_history")
       .then((res) => {
-        // console.log(res.data, "fetchImages");
         commit("SET_IMAGES", _.cloneDeep(res.data.reverse()));
       })
       .catch((err) => {
@@ -105,9 +106,8 @@ let actions = {
       });
   },
   async deleteImage({ state, dispatch }, index) {
-    console.log(state.images, index, state.images[index]);
     axios
-      .get("http://localhost:8000/delete", {
+      .get("http://localhost:3366/delete", {
         params: {
           hash: state.images[index].hash,
         },

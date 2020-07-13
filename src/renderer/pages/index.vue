@@ -4,9 +4,6 @@
     <photo-display></photo-display>
     <el-row>
       <el-col :span="24">
-        <frame />
-      </el-col>
-      <el-col :span="24">
         <upload-area></upload-area>
       </el-col>
       <el-col :span="24">
@@ -21,7 +18,6 @@ import UploadArea from "@/components/uploadArea";
 import GalleryArea from "@/components/galleryArea";
 import LoginDialog from "@/components/loginDialog";
 import PhotoDisplay from "@/components/photoDisplay";
-import Frame from "@/components/frame";
 export default {
   name: "app",
   data() {
@@ -31,8 +27,7 @@ export default {
     UploadArea,
     GalleryArea,
     LoginDialog,
-    PhotoDisplay,
-    Frame
+    PhotoDisplay
   }
 };
 </script>

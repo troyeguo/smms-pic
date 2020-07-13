@@ -66,9 +66,6 @@ export default {
       copy(this.uploadList[index].link);
       this.$message.success("复制到剪切板");
     }
-  },
-  mounted() {
-    console.log(this.uploadList, "uploadList");
   }
 };
 </script>

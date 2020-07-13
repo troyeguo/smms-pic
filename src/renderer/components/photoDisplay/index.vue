@@ -1,32 +1,34 @@
 <template>
   <div id="photo-display" v-if="isDisplay">
     <div class="photo-mask"></div>
-    <div class="photo-container">
-      <span class="icon-close" @click="handleClose"></span>
-      <el-row>
-        <el-col :span="24">
-          <div class="photo-show">
-            <span class="icon-next" @click="handlePrev"></span>
-            <div class="photo-area">
-              <img v-bind:src="images[photoIndex].url" alt class="photo" />
+    <transition name="el-zoom-in-bottom">
+      <div class="photo-container">
+        <span class="icon-close" @click="handleClose"></span>
+        <el-row>
+          <el-col :span="24">
+            <div class="photo-show">
+              <span class="icon-next" @click="handlePrev"></span>
+              <div class="photo-area">
+                <img v-bind:src="images[photoIndex].url" alt class="photo" />
+              </div>
+              <span class="icon-next icon-prev" @click="handleNext"></span>
             </div>
-            <span class="icon-next icon-prev" @click="handleNext"></span>
-          </div>
-        </el-col>
-        <el-col :span="24">
-          <div class="photo-operation">
-            <div class="operation-button" @click="handleCopy(photoIndex)">
-              <span class="icon-copy"></span>
-              <span>复制链接</span>
+          </el-col>
+          <el-col :span="24">
+            <div class="photo-operation">
+              <div class="operation-button" @click="handleCopy(photoIndex)">
+                <span class="icon-copy"></span>
+                <span>复制链接</span>
+              </div>
+              <div class="operation-button" @click="handleDelete(photoIndex)">
+                <span class="icon-delete"></span>
+                <span>删除图片</span>
+              </div>
             </div>
-            <div class="operation-button" @click="handleDelete(photoIndex)">
-              <span class="icon-delete"></span>
-              <span>删除图片</span>
-            </div>
-          </div>
-        </el-col>
-      </el-row>
-    </div>
+          </el-col>
+        </el-row>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -50,12 +52,9 @@ export default {
       deleteImage: "deleteImage"
     }),
     handleClose() {
-      console.log("close");
       this.setDisplay(false);
     },
     handlePrev() {
-      console.log("prev", this.photoIndex, this.images.length);
-
       if (this.photoIndex === 0) {
         this.$message.success("没有上一张啦！");
         return;
@@ -63,12 +62,6 @@ export default {
       this.setPhotoIndex(this.photoIndex - 1);
     },
     handleNext() {
-      console.log(
-        "next",
-        this.photoIndex,
-        this.images.length,
-        this.photoIndex === this.images.length - 1
-      );
       if (this.photoIndex === this.images.length - 1) {
         this.$message.success("没有下一张啦！");
         return;

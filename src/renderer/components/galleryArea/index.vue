@@ -91,7 +91,7 @@ export default {
     .gallery-content {
       width: 100vw;
       overflow-y: scroll;
-      height: calc(100vh - 270px);
+      height: calc(100vh - 240px);
       padding: 0 40px 0 40px !important;
       margin: 20px 0 20px 0;
     }

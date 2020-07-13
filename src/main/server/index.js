@@ -80,14 +80,6 @@ router.post("/upload", async (ctx) => {
       path.join(configDir, "uploads", file.path.split("\\").reverse()[0])
     )
   );
-  console.log(
-    path.resolve(
-      __dirname,
-      "uploads",
-      file.path.split("\\").reverse()[0],
-      "dirpath"
-    )
-  );
   const formHeaders = formData.getHeaders();
   const { data } = await axios.post("https://sm.ms/api/v2/upload", formData, {
     headers: {
@@ -140,7 +132,7 @@ function getIPAddress() {
 
 async function start() {
   try {
-    const port = 8000;
+    const port = 3366;
     koaServer = await app.listen(port);
     const address = koaServer.address();
     serverInfo = {

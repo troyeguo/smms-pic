@@ -10,7 +10,6 @@
 </template>
 
 <script>
-// console.log(this.props, "props");
 export default { name: "empty-page", props: ["content"] };
 </script>
 

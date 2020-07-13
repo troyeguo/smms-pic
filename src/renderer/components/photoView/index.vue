@@ -26,12 +26,17 @@ import EmptyPage from "../emptyPage/index";
 import { mapActions, mapGetters } from "vuex";
 import { Message, MessageBox } from "element-ui";
 import axios from "axios";
+const low = require("lowdb");
+const FileSync = require("lowdb/adapters/FileSync");
+// 加载数据库JSON文件
+const adapter = new FileSync("db.json");
+const db = low(adapter);
 const copy = require("copy-text-to-clipboard");
 export default {
   name: "photo-view",
   data() {
     return {
-      isAuthed: localStorage.getItem("isAuthed") === "yes",
+      isAuthed: db.get("token").value(),
       hoverIndex: -1
     };
   },
@@ -85,7 +90,7 @@ export default {
 
 <style lang="scss" scoped>
 .photo-area {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 #photo-view {
   width: 100%;
@@ -97,7 +102,7 @@ export default {
     height: 123px;
     opacity: 1;
     border-radius: 5px;
-    margin: 10px;
+    margin-bottom: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
