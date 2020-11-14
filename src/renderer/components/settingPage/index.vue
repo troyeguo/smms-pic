@@ -9,27 +9,16 @@
           <div class="libray-icon">
             <img src="../../assets/sm.png" alt style="height:100%" />
           </div>
-          <span class="library-title">SM.MS</span>
+          <span class="library-title">SM.MS图床</span>
           <el-button
             type="primary"
             @click="handleLogin('SM.MS')"
             size="medium"
             round
-          >{{smmsToken?library==="SM.MS"?"解绑":"选择":"绑定"}}</el-button>
-        </div>
-      </el-row>
-      <el-row :span="4" :offset="4">
-        <div class="library-container">
-          <div class="libray-icon">
-            <img src="../../assets/imgur.png" alt style="height:100%" />
-          </div>
-          <span class="library-title">Imgur</span>
-          <el-button
-            type="primary"
-            @click="handleLogin('Imgur')"
-            size="medium"
-            round
-          >{{smmsToken?library==="SM.MS"?"解绑":"选择":"绑定"}}</el-button>
+            >{{
+              smmsToken ? (library === "SM.MS" ? "解绑" : "选择") : "绑定"
+            }}</el-button
+          >
         </div>
       </el-row>
       <el-row :span="4" :offset="4">
@@ -43,7 +32,10 @@
             @click="handleLogin('Github')"
             size="medium"
             round
-          >{{smmsToken?library==="SM.MS"?"解绑":"选择":"绑定"}}</el-button>
+            >{{
+              smmsToken ? (library === "SM.MS" ? "解绑" : "选择") : "绑定"
+            }}</el-button
+          >
         </div>
       </el-row>
       <el-row :span="4" :offset="4">
@@ -57,7 +49,10 @@
             @click="handleLogin('Gitee')"
             size="medium"
             round
-          >{{smmsToken?library==="SM.MS"?"解绑":"选择":"绑定"}}</el-button>
+            >{{
+              smmsToken ? (library === "SM.MS" ? "解绑" : "选择") : "绑定"
+            }}</el-button
+          >
         </div>
       </el-row>
     </el-row>
@@ -68,8 +63,12 @@
     <el-row>
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="协议" size="medium">
-          <el-radio v-model="formInline.protocal" label="1" size="medium">http</el-radio>
-          <el-radio v-model="formInline.protocal" label="2" size="medium">socks</el-radio>
+          <el-radio v-model="formInline.protocal" label="1" size="medium"
+            >http</el-radio
+          >
+          <el-radio v-model="formInline.protocal" label="2" size="medium"
+            >socks</el-radio
+          >
         </el-form-item>
 
         <el-form-item label="地址" size="medium">
@@ -86,13 +85,21 @@
           ></el-input-number>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit" size="medium">保存</el-button>
+          <el-button type="primary" @click="onSubmit" size="medium"
+            >保存</el-button
+          >
         </el-form-item>
       </el-form>
     </el-row>
     <el-row>
-      <span class="setting-title" style="margin-right:20px">自动复制图片地址</span>
-      <el-switch v-model="value" active-color="#00c89d" @change="onSwitch"></el-switch>
+      <span class="setting-title" style="margin-right:20px"
+        >自动复制图片地址</span
+      >
+      <el-switch
+        v-model="value"
+        active-color="#00c89d"
+        @change="onSwitch"
+      ></el-switch>
     </el-row>
   </div>
 </template>
@@ -110,14 +117,14 @@ export default {
       formInline: {
         url: "",
         port: "",
-        protocal: null
+        protocal: null,
       },
       library: db.get("library").value,
-      smmsToken: db.get("smmsToken").value
+      smmsToken: db.get("smmsToken").value,
     };
   },
   computed: {
-    ...mapGetters("app", ["isShowLogin", "isAuthed", "uploadList"])
+    ...mapGetters("app", ["isShowLogin", "isAuthed", "uploadList"]),
   },
   methods: {
     ...mapActions("app", {
@@ -125,7 +132,7 @@ export default {
       setLoginLibrary: "setLoginLibrary",
       setUploadList: "setUploadList",
       fetchImages: "fetchImages",
-      setActiveTab: "setActiveTab"
+      setActiveTab: "setActiveTab",
     }),
     handleChange(value) {
       console.log(value);
@@ -141,8 +148,8 @@ export default {
     onSwitch(value) {
       console.log(value, "value");
       db.set("isCopy", value ? "yes" : "no").write();
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -192,7 +199,7 @@ export default {
     .library-title {
       display: inline-block;
       font-size: 16px;
-      line-height: 30px;
+      line-height: 35px;
       color: #353535;
       margin-right: 10px;
     }
