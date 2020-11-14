@@ -1,14 +1,25 @@
 <template>
-  <el-dialog title="使用 SM.MS 账号登录" :visible.sync="isShowLogin" :show-close="false">
+  <el-dialog title="绑定图床账号" :visible.sync="isShowLogin" :show-close="false">
     <el-form :model="form">
+      <el-form-item label="图床" :label-width="formLabelWidth">
+        <el-select v-model="loginLibrary" placeholder="请选择" @change="handleChangeLibrary">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+            :disabled="item.disabled"
+          ></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="用户名" :label-width="formLabelWidth">
-        <el-input v-model="form.username" autocomplete="off" placeholder="请输入 SM.MS 用户名"></el-input>
+        <el-input v-model="form.username" autocomplete="off" :placeholder="userPlaceholder"></el-input>
       </el-form-item>
       <el-form-item label="密码" :label-width="formLabelWidth">
         <el-input
           v-model="form.password"
           autocomplete="off"
-          placeholder="请输入 SM.MS 密码"
+          :placeholder="passPlaceholder"
           show-password
         ></el-input>
       </el-form-item>
@@ -22,7 +33,6 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import { Message } from "element-ui";
 import axios from "axios";
 export default {
   data() {
@@ -30,17 +40,54 @@ export default {
       formLabelWidth: "60px",
       loading: false,
       form: {
-        name: "",
+        username: "",
         password: ""
-      }
+      },
+      options: [
+        {
+          value: "SM.MS",
+          label: "SM.MS"
+        },
+        {
+          value: "Imgur",
+          label: "Imgur",
+          disabled: true
+        },
+        {
+          value: "Github",
+          label: "Github",
+          disabled: true
+        },
+        {
+          value: "Gitee",
+          label: "Gitee",
+          disabled: true
+        }
+      ],
+      value: ""
     };
   },
   computed: {
-    ...mapGetters("app", ["isShowLogin"])
+    ...mapGetters("app", ["isShowLogin", "loginLibrary", "isAuthed"]),
+    userPlaceholder: function() {
+      return "请输入" + this.loginLibrary + "用户名";
+    },
+    passPlaceholder: function() {
+      return "请输入" + this.loginLibrary + "密码";
+    }
+  },
+  watch: {
+    isAuthed(newValue, oldValue) {
+      if (newValue === true) {
+        this.setLoginDialog(false);
+        this.loading = false;
+      }
+    }
   },
   methods: {
     ...mapActions("app", {
       setLoginDialog: "setLoginDialog",
+      setLoginLibrary: "setLoginLibrary",
       setAuth: "setAuth",
       fetchToken: "fetchToken",
       fetchImages: "fetchImages"
@@ -48,19 +95,23 @@ export default {
     handleClose() {
       this.setLoginDialog(false);
     },
-    async handleLogin() {
+    handleLogin() {
       this.loading = true;
-      console.log(this.form.name, this.form.password);
       this.fetchToken({
         username: this.form.username,
-        password: this.form.password
+        password: this.form.password,
+        library: this.loginLibrary
       });
-      this.setLoginDialog(false);
-      this.loading = false;
+    },
+    handleChangeLibrary(value) {
+      this.setLoginLibrary(value);
     }
-  }
+  },
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
+.el-dialog {
+  height: 400px;
+}
 </style>

@@ -32,7 +32,7 @@
       </div>
       <div class="login-account" v-if="!(isShowAuthed || isAuthed)" @click="handleLogin">
         <span class="icon-account"></span>
-        <p class="upload-text">点击绑定 SM.MS 账号</p>
+        <p class="upload-text">点击绑定图床账号</p>
       </div>
     </div>
   </div>
@@ -41,6 +41,7 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import axios from "axios";
+import copy from "copy-text-to-clipboard";
 import _ from "lodash";
 const low = require("lowdb");
 const FileSync = require("lowdb/adapters/FileSync");
@@ -50,7 +51,8 @@ const db = low(adapter);
 export default {
   data() {
     return {
-      isShowAuthed: db.get("token").value(),
+      isShowAuthed: db.get("smmsToken").value(),
+      isCopy: db.get("isCopy").value() === "yes" ? true : false,
       imageList: [],
       progress: 0,
       uploadFiles: [],
@@ -119,6 +121,7 @@ export default {
       this.setLoginDialog(true);
     },
     async handleFile() {
+      let urlList = "";
       for (let i = 0; i < this.imageList.length; i++) {
         let size = Math.floor(this.imageList[i].size / 1024);
         if (size > 5 * 1024 * 1024) {
@@ -144,6 +147,7 @@ export default {
         let formData = new FormData();
         this.uploadFiles[i].waiting = false;
         this.uploadFiles[i].uploading = true;
+
         this.setUploadList(_.cloneDeep(this.uploadFiles));
         formData.append(
           "file",
@@ -159,6 +163,7 @@ export default {
             this.uploadFiles[i].finished = true;
             this.handleProgress();
             this.uploadFiles[i].link = data.data.url;
+            urlList += data.data.url + "\n";
             this.setUploadList(_.cloneDeep(this.uploadFiles));
             this.$message.success("上传成功");
           })
@@ -170,6 +175,10 @@ export default {
           });
       }
       this.fetchImages();
+      console.log(this.isCopy, urlList);
+      if (this.isCopy) {
+        copy(urlList);
+      }
     }
   }
 };
@@ -238,7 +247,7 @@ export default {
     .upload-text {
       font-size: 22px;
       font-weight: 500;
-      line-height: 37px;
+      line-height: 47px;
       color: rgba(255, 255, 255, 1);
       opacity: 1;
     }

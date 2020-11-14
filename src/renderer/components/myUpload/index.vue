@@ -13,7 +13,13 @@
                 <span class="icon-delete"></span>
               </div>
             </div>
-            <img v-bind:src="image.url" class="photo" alt @click="handleClick(index)" />
+            <img
+              v-bind:src="image.url"
+              class="photo"
+              alt
+              @click="handleClick(index)"
+              :style="image.width/image.height>200/123?{'width':'100%'}:{'height':'100%'}"
+            />
           </div>
         </el-col>
       </el-row>
@@ -24,7 +30,6 @@
 <script>
 import EmptyPage from "../emptyPage/index";
 import { mapActions, mapGetters } from "vuex";
-import { Message, MessageBox } from "element-ui";
 import axios from "axios";
 const low = require("lowdb");
 const FileSync = require("lowdb/adapters/FileSync");
@@ -33,10 +38,10 @@ const adapter = new FileSync("db.json");
 const db = low(adapter);
 const copy = require("copy-text-to-clipboard");
 export default {
-  name: "photo-view",
+  name: "my-upload",
   data() {
     return {
-      isAuthed: db.get("token").value(),
+      isAuthed: db.get("smmsToken").value(),
       hoverIndex: -1
     };
   },
@@ -62,7 +67,7 @@ export default {
     },
     handleCopy(index) {
       copy(this.images[index].url);
-      Message.success("复制到剪切板");
+      this.$message.success("复制到剪切板");
     },
     handleDelete(index) {
       this.$confirm("此操作将永久删除该图片, 是否继续?", "提示", {
@@ -82,7 +87,7 @@ export default {
         });
     }
   },
-  async created() {
+  created() {
     this.isAuthed && this.fetchImages();
   }
 };
@@ -108,9 +113,6 @@ export default {
     align-items: center;
     overflow: hidden;
     box-shadow: 0 0 8px rgba($color: #000000, $alpha: 0.1);
-    .photo {
-      height: 100%;
-    }
     .photo-hover {
       position: absolute;
       width: 50px;

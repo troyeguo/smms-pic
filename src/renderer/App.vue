@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" onmousedown="onDrop">
     <keep-alive>
       <router-view />
     </keep-alive>
@@ -12,7 +12,12 @@ import axios from "axios";
 
 export default {
   name: "app",
-  methods: {},
+  methods: {
+    onDrop: function() {
+      console.log("drag");
+      return false;
+    }
+  },
   computed: {}
 };
 </script>

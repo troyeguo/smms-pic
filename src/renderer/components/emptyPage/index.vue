@@ -23,7 +23,7 @@ export default { name: "empty-page", props: ["content"] };
 }
 .empty-illustration {
   width: 372px;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 .empty-text {
   font-size: 17px;

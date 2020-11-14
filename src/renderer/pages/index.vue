@@ -4,18 +4,18 @@
     <photo-display></photo-display>
     <el-row>
       <el-col :span="24">
-        <upload-area></upload-area>
+        <upload-photo></upload-photo>
       </el-col>
       <el-col :span="24">
-        <gallery-area></gallery-area>
+        <tab-control></tab-control>
       </el-col>
     </el-row>
   </div>
 </template>
 
 <script>
-import UploadArea from "@/components/uploadArea";
-import GalleryArea from "@/components/galleryArea";
+import UploadPhoto from "@/components/uploadPhoto";
+import TabControl from "@/components/tabControl";
 import LoginDialog from "@/components/loginDialog";
 import PhotoDisplay from "@/components/photoDisplay";
 export default {
@@ -24,8 +24,8 @@ export default {
     return {};
   },
   components: {
-    UploadArea,
-    GalleryArea,
+    UploadPhoto,
+    TabControl,
     LoginDialog,
     PhotoDisplay
   }

@@ -30,7 +30,12 @@
               <p>上传失败</p>
             </div>
           </div>
-          <img v-bind:src="item.url" class="photo" alt />
+          <img
+            v-bind:src="item.url"
+            class="photo"
+            alt
+            :style="item.width/item.height>200/123?{'width':'100%'}:{'height':'100%'}"
+          />
         </div>
       </el-col>
     </el-row>
@@ -87,9 +92,6 @@ export default {
     align-items: center;
     overflow: hidden;
     box-shadow: 0 0 8px rgba($color: #000000, $alpha: 0.1);
-    .photo {
-      height: 100%;
-    }
     .photo-loading {
       background: rgba(5, 176, 138, 0.55);
     }

@@ -9,7 +9,12 @@
             <div class="photo-show">
               <span class="icon-next" @click="handlePrev"></span>
               <div class="photo-area">
-                <img v-bind:src="images[photoIndex].url" alt class="photo" />
+                <img
+                  v-bind:src="images[photoIndex].url"
+                  alt
+                  class="photo"
+                  :style="images[photoIndex].width/images[photoIndex].height>608/339?{'width':'100%'}:{'height':'100%'}"
+                />
               </div>
               <span class="icon-next icon-prev" @click="handleNext"></span>
             </div>
@@ -34,7 +39,6 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import { Message } from "element-ui";
 const copy = require("copy-text-to-clipboard");
 
 export default {
@@ -137,13 +141,9 @@ export default {
     .photo-area {
       width: 608px;
       height: 339px;
-      overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
-      .photo {
-        width: 100%;
-      }
     }
     .icon-prev {
       transform: rotate(180deg);

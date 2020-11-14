@@ -17,7 +17,13 @@ const configDir = (electron.app || electron.remote.app).getPath("userData");
 console.log(configDir);
 var fs = require("fs");
 // 初始化数据库
-db.defaults({ images: [], token: null }).write();
+db.defaults({
+  images: [],
+  smmsToken: null,
+  imgurToken: null,
+  isCopy: "no",
+  library: null,
+}).write();
 var dirPath = path.join(configDir, "uploads");
 if (!fs.existsSync(dirPath)) {
   fs.mkdirSync(dirPath);
@@ -40,22 +46,30 @@ app.use(
 );
 console.log("后台启动");
 router.get("/token", async (ctx) => {
-  console.log("fetch token");
-  const { data } = await axios.post(
-    "https://sm.ms/api/v2/token",
-    qs.stringify(ctx.request.query)
-  );
-  if (!data.data.token) {
-    ctx.throw(401);
+  console.log(ctx.request.query, "fetch token");
+  if (ctx.request.query.library === "imgur") {
+    db.set("imgurUsername", ctx.request.query.username).write();
+    db.set("imgurPassword", ctx.request.query.password).write();
+    ctx.body = "success";
+  } else {
+    const { data } = await axios.post(
+      "https://sm.ms/api/v2/token",
+      qs.stringify(ctx.request.query)
+    );
+    if (!data.data.token) {
+      ctx.throw(401);
+    }
+    db.set("smmsToken", data.data.token).write();
+    db.set("library", "SM.MS").write();
+
+    console.log(data.data, "data.data");
+    ctx.body = data.data;
   }
-  db.set("token", data.data.token).write();
-  console.log(data.data, "data.data");
-  ctx.body = data.data;
 });
 router.get("/upload_history", async (ctx) => {
   const { data } = await axios.get("https://sm.ms/api/v2/upload_history", {
     headers: {
-      Authorization: db.get("token").value(),
+      Authorization: db.get("smmsToken").value(),
     },
   });
   if (!data.data) {
@@ -84,7 +98,7 @@ router.post("/upload", async (ctx) => {
   const { data } = await axios.post("https://sm.ms/api/v2/upload", formData, {
     headers: {
       ...formHeaders,
-      Authorization: db.get("token").value(),
+      Authorization: db.get("smmsToken").value(),
     },
   });
   // console.log(data);
@@ -100,7 +114,7 @@ router.get("/delete", async (ctx) => {
     `https://sm.ms/api/v2/delete/${ctx.request.query.hash}`,
     {
       headers: {
-        Authorization: db.get("token").value(),
+        Authorization: db.get("smmsToken").value(),
       },
     }
   );

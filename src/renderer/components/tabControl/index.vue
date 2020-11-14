@@ -8,7 +8,7 @@
             v-bind:class="{'active-title': activeTab===0}"
             @click="handleSelect(0)"
           >
-            <span class="icon-photo"></span>
+            <span class="icon-photo" :style="activeTab===0?{'color':'white'}:{'color':'black'}"></span>
             <span>我的上传</span>
           </div>
           <div
@@ -16,34 +16,47 @@
             v-bind:class="{'active-title': activeTab===1}"
             @click="handleSelect(1)"
           >
-            <span class="icon-album"></span>
+            <span class="icon-album" :style="activeTab===1?{'color':'white'}:{'color':'black'}"></span>
             <span>正在上传</span>
+          </div>
+          <div
+            class="album-title"
+            v-bind:class="{'active-title': activeTab===2}"
+            @click="handleSelect(2)"
+          >
+            <span class="icon-cog" :style="activeTab===2?{'color':'white'}:{'color':'black'}"></span>
+            <span>软件设置</span>
           </div>
         </div>
       </el-col>
       <el-col :span="24" v-show="activeTab===0" class="gallery-content">
         <keep-alive>
-          <photo-view></photo-view>
+          <my-upload></my-upload>
         </keep-alive>
       </el-col>
       <el-col :span="24" v-show="activeTab===1" class="gallery-content">
         <upload-list></upload-list>
+      </el-col>
+      <el-col :span="24" v-show="activeTab===2" class="gallery-content">
+        <setting-page></setting-page>
       </el-col>
     </el-row>
   </div>
 </template>
 
 <script>
-import PhotoView from "../photoView";
+import MyUpload from "../myUpload";
 import UploadList from "../uploadList";
+import SettingPage from "../settingPage";
 import { mapActions, mapGetters } from "vuex";
 
 export default {
-  name: "gallery-area",
+  name: "tab-control",
 
   components: {
-    PhotoView,
-    UploadList
+    MyUpload,
+    UploadList,
+    SettingPage
   },
   data() {
     return {};
@@ -121,6 +134,11 @@ export default {
         }
         .icon-album {
           font-size: 22px;
+          margin-right: 10px;
+          color: white;
+        }
+        .icon-cog {
+          font-size: 20px;
           margin-right: 10px;
           color: white;
         }

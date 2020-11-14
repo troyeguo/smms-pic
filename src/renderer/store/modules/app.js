@@ -1,6 +1,6 @@
 import axios from "axios";
-import { Message } from "element-ui";
 import _ from "lodash";
+import { Message } from "element-ui";
 const low = require("lowdb");
 const FileSync = require("lowdb/adapters/FileSync");
 // 加载数据库JSON文件
@@ -8,6 +8,7 @@ const adapter = new FileSync("db.json");
 const db = low(adapter);
 let state = {
   isShowLogin: false,
+  loginLibrary: "",
   isAuthed: false,
   images:
     db
@@ -22,6 +23,7 @@ let state = {
 
 let getters = {
   isShowLogin: (state) => state.isShowLogin,
+  loginLibrary: (state) => state.loginLibrary,
   isAuthed: (state) => state.isAuthed,
   images: (state) => state.images,
   photoIndex: (state) => state.photoIndex,
@@ -33,6 +35,9 @@ let getters = {
 let mutations = {
   SET_LOGIN_DIALOG: (state, isShowLogin) => {
     state.isShowLogin = isShowLogin;
+  },
+  SET_LOGIN_LIBRARY: (state, loginLibrary) => {
+    state.loginLibrary = loginLibrary;
   },
   SET_AUTH: (state, isAuthed) => {
     state.isAuthed = isAuthed;
@@ -58,6 +63,9 @@ let actions = {
   setLoginDialog({ commit }, isShowLogin) {
     return commit("SET_LOGIN_DIALOG", isShowLogin);
   },
+  setLoginLibrary({ commit }, loginLibrary) {
+    return commit("SET_LOGIN_LIBRARY", loginLibrary);
+  },
   setAuth({ commit }, isAuthed) {
     return commit("SET_AUTH", isAuthed);
   },
@@ -75,17 +83,17 @@ let actions = {
   },
   async fetchToken({ commit, dispatch }, data) {
     await axios
-      .get("http://localhost:3366/token", {
+      .get(`http://localhost:3366/token`, {
         params: {
           username: data.username,
           password: data.password,
+          library: data.library,
         },
       })
       .then((res) => {
         console.log(res);
         console.log("登录成功");
         Message.success("登录成功");
-        localStorage.setItem("isAuthed", "yes");
         commit("SET_AUTH", true);
         dispatch("fetchImages");
       })
