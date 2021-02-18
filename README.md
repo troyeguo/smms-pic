@@ -9,15 +9,6 @@
   一个基于 Vue，Koa2 和 Electron 开发的图床工具
 </h3>
 
-<div align="center">
-  <a href="https://github.com/troyeguo/Zen/releases/latest">
-    <img src="https://ci.appveyor.com/api/projects/status/3ktyyycodq6s4yew?svg=true" alt="">
-  </a>
-  <a href="https://github.com/troyeguo/Zen/releases/latest">
-    <img src="https://travis-ci.com/troyeguo/Zen.svg?branch=master" alt="">
-  </a>
-</div>
-
 ## 预览
 
 <div align="center">
@@ -31,9 +22,9 @@
 
 ## 简介
 
-👋 欢迎使用 **Zen** ！
+欢迎使用 **Zen** ！
 
-😉 **Zen** 是一个开源免费的图床工具，目前仅支持 SM.MS 图床，后续考虑添加更多图床。
+**Zen** 是一个开源免费的图床工具，目前仅支持 SM.MS 图床，后续考虑添加更多图床。
 
 ## 使用方法
 
@@ -46,7 +37,7 @@
 1. 将项目源码下载到本地
 
    ```
-   git clone https://github.com/troyeguo/Zen.git
+   git clone https://github.com/troyeguo/smms-pic.git
    ```
 
 2. cd 到项目文件夹，运行以下代码进入客户端模式
